@@ -8,9 +8,14 @@ const vida = document.getElementById("vida");
 
 const time = document.getElementById("times");
 
+const score = document.getElementById("score")
+
 let vidas = 5;
 
 let segundos = 60;
+
+let puntos = 0;
+
 
 
 
@@ -86,7 +91,11 @@ setInterval(() => {
 
                 if (bala.getBoundingClientRect().left >= enemigo.getBoundingClientRect().left && bala.getBoundingClientRect().left <= enemigo.getBoundingClientRect().left + 20) {
                     
-                    console.log("hit!")
+                    console.log("hit!");
+
+                    puntos = puntos + 10;
+
+                    score.textContent = puntos;
                     
                     enemigo.style.backgroundImage = 'url("img/explosion.png")';
                     
@@ -134,11 +143,11 @@ setInterval(() => {
 
     let enemigos = document.querySelectorAll('.enemigo');
 
-    enemigos.forEach(element => {
+    enemigos.forEach(enemigo => {
 
-        element.style.top = (element.getBoundingClientRect().top + 10) + 'px';
+        enemigo.style.top = (enemigo.getBoundingClientRect().top + 10) + 'px';
 
-        if (element.getBoundingClientRect().top > nave.getBoundingClientRect().top) {
+        if (enemigo.getBoundingClientRect().top > nave.getBoundingClientRect().top) {
 
             vidas--;
 
@@ -152,7 +161,7 @@ setInterval(() => {
 
             }
 
-            element.remove();
+            enemigo.remove();
 
         }
 
