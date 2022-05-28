@@ -17,7 +17,7 @@ let segundos = 60;
 let puntos = 0;
 
 
-
+// SEGUNDERO
 
 setInterval(() => {
 
