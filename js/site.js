@@ -23,6 +23,8 @@ setInterval(() => {
 
     segundos--;
 
+    console.log()
+
     time.textContent = segundos;
 
     if (segundos == 0) {
@@ -75,6 +77,8 @@ setInterval(() => {
 
         bala.style.top = (bala.getBoundingClientRect().top - 20) + 'px';
 
+        /* console.log(bala.getBoundingClientRect().top, bala.getBoundingClientRect().left, bala.getBoundingClientRect().bottom, bala.getBoundingClientRect().right) */
+
         if (bala.getBoundingClientRect().top <= 0) {
 
             bala.remove();
@@ -87,11 +91,13 @@ setInterval(() => {
         
         enemigos.forEach(enemigo => {
 
-            if (bala.getBoundingClientRect().top <= enemigo.getBoundingClientRect().top + 20) {
+            if (bala.getBoundingClientRect().top <= enemigo.getBoundingClientRect().top +50) {
 
-                if (bala.getBoundingClientRect().left >= enemigo.getBoundingClientRect().left && bala.getBoundingClientRect().left <= enemigo.getBoundingClientRect().left + 20) {
+                if (bala.getBoundingClientRect().left >= enemigo.getBoundingClientRect().left - 10 && bala.getBoundingClientRect().left <= enemigo.getBoundingClientRect().left + 30) {
                     
                     console.log("hit!");
+
+                    bala.remove();
 
                     puntos = puntos + 10;
 
@@ -102,8 +108,6 @@ setInterval(() => {
                     setTimeout(() => {
 
                         enemigo.remove();
-
-                        bala.remove();
 
                     }, 100);
 
@@ -133,7 +137,7 @@ setInterval(() => {
 
         body.append(enemigo);
 
-        enemigo.style.left = (Math.random() * window.innerWidth - 50) + 'px';
+        enemigo.style.left = (Math.random() * window.innerWidth) + 'px';
 
     }
 
