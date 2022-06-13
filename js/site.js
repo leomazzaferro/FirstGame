@@ -2,13 +2,12 @@ const nave = document.getElementById("nave");
 
 const body = document.getElementById("body");
 
-const misil = document.getElementById("misil");
-
 const vida = document.getElementById("vida");
 
 const time = document.getElementById("times");
 
-const score = document.getElementById("score")
+const score = document.getElementById("score");
+
 
 let vidas = 5;
 
@@ -16,27 +15,7 @@ let segundos = 60;
 
 let puntos = 0;
 
-
-// SEGUNDERO
-
-setInterval(() => {
-
-    segundos--;
-
-    console.log()
-
-    time.textContent = segundos;
-
-    if (segundos == 0) {
-
-        alert('You Win!');
-
-        location.reload();
-
-    }
-
-}, 1000);
-
+let aparecer = 0;
 
 
 // POSICION NAVE
@@ -48,10 +27,50 @@ document.addEventListener('mousemove', (e) => {
 });
 
 
+//INICIO TIEMPO
+tiempo()
+
+
+//GENERAR DISPARO
+document.addEventListener('click', () => {
+
+    disparo();
+
+});
+
+//GENERAR ENEMIGOS
+
+generarEnemigos();
+
+
+// SEGUNDERO
+
+function tiempo() {
+
+    setInterval(() => {
+
+        segundos--;
+
+        time.innerText = segundos;
+
+        if (segundos == 0) {
+
+            alert("GANASTE");
+
+            location.reload();
+            
+            console.log(puntos)
+            
+        }
+
+    }, 1000);
+
+}
+
 
 // GENERAR DISPAROS
 
-document.addEventListener('click', () => {
+function disparo() {
 
     let bala = document.createElement('div');
 
@@ -59,116 +78,116 @@ document.addEventListener('click', () => {
 
     bala.style.bottom = 70 + 'px';
 
-    bala.style.left = (nave.getBoundingClientRect().left + 20) + 'px';
-    
+    bala.style.left = (nave.getBoundingClientRect().left + 25) + 'px';
+
     body.append(bala);
-    
-});
+
+    // MOVIMIENTO DE DISPAROS
+
+    setInterval(() => {
+
+        let balas = document.querySelectorAll('.bala');
+
+        balas.forEach(bala => {
+
+            bala.style.top = (bala.getBoundingClientRect().top - 10) + 'px';
+
+            /* console.log(bala.getBoundingClientRect().top, bala.getBoundingClientRect().left, bala.getBoundingClientRect().bottom, bala.getBoundingClientRect().right) */
+
+            if (bala.getBoundingClientRect().top <= 0) {
+
+                bala.remove();
+
+            }
+
+            // DISPARO ACERTADO
+
+            let enemigos = document.querySelectorAll('.enemigo');
+
+            enemigos.forEach(enemigo => {
+
+                if (bala.getBoundingClientRect().top <= enemigo.getBoundingClientRect().top + 50) {
+
+                    if (bala.getBoundingClientRect().left >= enemigo.getBoundingClientRect().left - 10 && bala.getBoundingClientRect().left <= enemigo.getBoundingClientRect().left + 30) {
+
+                        console.log("hit!");
+
+                        bala.remove();
+
+                        puntos = puntos + 10;
+
+                        score.innerText = puntos;
+
+                        enemigo.style.backgroundImage = 'url("img/explosion.png")';
+
+                        setTimeout(() => {
+
+                            enemigo.remove();
+
+                        }, 100);
+
+                    }
+
+                }
+
+            });
+
+        })
+
+    }, 100);
+
+}
 
 
+// GENERAR ENEMIGOS
 
-// MOVIMIENTO DE DISPAROS
+function generarEnemigos() {
 
-setInterval(() => {
+    setInterval(() => {
 
-    let balas = document.querySelectorAll('.bala');
+        aparecer++;
 
-    balas.forEach(bala => {
+        if (aparecer % 10 == 0) {
 
-        bala.style.top = (bala.getBoundingClientRect().top - 20) + 'px';
+            let enemigo = document.createElement('div');
 
-        /* console.log(bala.getBoundingClientRect().top, bala.getBoundingClientRect().left, bala.getBoundingClientRect().bottom, bala.getBoundingClientRect().right) */
+            enemigo.classList.add('enemigo');
 
-        if (bala.getBoundingClientRect().top <= 0) {
+            body.append(enemigo);
 
-            bala.remove();
+            enemigo.style.left = (Math.random() * window.innerWidth) + 'px';
 
         }
 
-        // DISPARO ACERTADO
+
+        // MOVIMIENTO DE ENEMIGOS
 
         let enemigos = document.querySelectorAll('.enemigo');
-        
+
         enemigos.forEach(enemigo => {
 
-            if (bala.getBoundingClientRect().top <= enemigo.getBoundingClientRect().top +50) {
+            enemigo.style.top = (enemigo.getBoundingClientRect().top + 10) + 'px';
 
-                if (bala.getBoundingClientRect().left >= enemigo.getBoundingClientRect().left - 10 && bala.getBoundingClientRect().left <= enemigo.getBoundingClientRect().left + 30) {
-                    
-                    console.log("hit!");
+            if (enemigo.getBoundingClientRect().top > nave.getBoundingClientRect().top) {
 
-                    bala.remove();
+                vidas--;
 
-                    puntos = puntos + 10;
+                vida.textContent = vidas;
 
-                    score.textContent = puntos;
-                    
-                    enemigo.style.backgroundImage = 'url("img/explosion.png")';
-                    
-                    setTimeout(() => {
+                if (vidas == -1) {
 
-                        enemigo.remove();
+                    alert("GAME OVER");
 
-                    }, 100);
+                    location.reload();
 
                 }
+
+                enemigo.remove();
 
             }
 
         });
 
-    })
+    }, 150)
 
-}, 100);
-
-// GENERAR ENEMIGOS
-
-let aparecer = 0;
-
-setInterval(() => {
-
-    aparecer++;
-
-    if (aparecer % 10 == 0) {
-
-        let enemigo = document.createElement('div');
-
-        enemigo.classList.add('enemigo');
-
-        body.append(enemigo);
-
-        enemigo.style.left = (Math.random() * window.innerWidth) + 'px';
-
-    }
-
-
-
-    // MOVIMIENTO DE ENEMIGOS
-
-    let enemigos = document.querySelectorAll('.enemigo');
-
-    enemigos.forEach(enemigo => {
-
-        enemigo.style.top = (enemigo.getBoundingClientRect().top + 10) + 'px';
-
-        if (enemigo.getBoundingClientRect().top > nave.getBoundingClientRect().top) {
-
-            vidas--;
-
-            vida.textContent = vidas;
-
-            if (vidas == -1) {
-
-                alert("GAME OVER");
-
-                location.reload();
-
-            }
-
-            enemigo.remove();
-
-        }
-
-    });
-    
-}, 150)
+};
